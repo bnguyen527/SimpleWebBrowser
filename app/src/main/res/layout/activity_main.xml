@@ -13,7 +13,7 @@
         android:ems="10"
         android:hint="@string/addressBarHint"
         android:inputType="textUri"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/webPageContainer"
         app:layout_constraintEnd_toStartOf="@+id/goButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="0.85"
@@ -34,5 +34,17 @@
         app:layout_constraintStart_toEndOf="@+id/addressBar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
+
+    <FrameLayout
+        android:id="@+id/webPageContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addressBar">
+
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
