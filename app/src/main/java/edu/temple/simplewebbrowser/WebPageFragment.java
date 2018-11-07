@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ImageButton;
 
 
 /**
@@ -24,6 +25,8 @@ public class WebPageFragment extends Fragment {
 
     private String webAddress;
     private WebView webView;
+    private ImageButton backButton;
+    private ImageButton forwardButton;
     private BrowserListener browserListener;
 
     public WebPageFragment() {
@@ -58,7 +61,22 @@ public class WebPageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_webpage, container, false);
         webView = view.findViewById(R.id.webView);
+        backButton = view.findViewById(R.id.backButton);
+        forwardButton = view.findViewById(R.id.forwardButton);
+
         webView.loadUrl(webAddress);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goBack();
+            }
+        });
+        forwardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goForward();
+            }
+        });
         return view;
     }
 
@@ -72,6 +90,18 @@ public class WebPageFragment extends Fragment {
         }
     }
 
+    public void goBack() {
+        browserListener.goBack();
+    }
+
+    public void goForward() {
+        browserListener.goForward();
+    }
+
+    public String getWebAddress() {
+        return webAddress;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -79,5 +109,7 @@ public class WebPageFragment extends Fragment {
      * activity.
      */
     interface BrowserListener {
+        void goBack();
+        void goForward();
     }
 }

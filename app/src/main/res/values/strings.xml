@@ -2,4 +2,6 @@
     <string name="app_name">SimpleWebBrowser</string>
     <string name="addressBarHint">Type a URL</string>
     <string name="goButton">GO</string>
+    <string name="backButtonDesc">Go back</string>
+    <string name="forwardButtonDesc">Go forward</string>
 </resources>
