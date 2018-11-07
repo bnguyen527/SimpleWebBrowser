@@ -12,13 +12,12 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-public class MainActivity extends AppCompatActivity implements WebPageFragment.BrowserListener {
+public class MainActivity extends AppCompatActivity implements TabFragment.BrowserListener {
 
     EditText addressBar;
     Button goButton;
     FragmentManager fragmentManager;
-    ArrayList<WebPageFragment> browsingHistory;
-    ListIterator<WebPageFragment> historyIterator;
+    TabFragment browserTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,17 +27,15 @@ public class MainActivity extends AppCompatActivity implements WebPageFragment.B
         addressBar = findViewById(R.id.addressBar);
         goButton = findViewById(R.id.goButton);
         fragmentManager = getSupportFragmentManager();
-        browsingHistory = new ArrayList<>();
-        historyIterator = browsingHistory.listIterator();
+        browserTab = new TabFragment();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.webPageContainer, browserTab).commit();
 
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String webAddress = addressBar.getText().toString();
-                WebPageFragment webPageFragment = WebPageFragment.newInstance(webAddress);
-                historyIterator.add(webPageFragment);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.webPageContainer, webPageFragment).commit();
+                browserTab.loadUrl(webAddress);
             }
         });
     }
@@ -50,28 +47,7 @@ public class MainActivity extends AppCompatActivity implements WebPageFragment.B
     }
 
     @Override
-    public void goBack() {
-        if (!browsingHistory.isEmpty()) {
-            historyIterator.previous();
-            if (historyIterator.hasPrevious()) {
-                WebPageFragment previousPage = historyIterator.previous();
-                historyIterator.next();
-                addressBar.setText(previousPage.getWebAddress());
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.webPageContainer, previousPage).commit();
-            } else {
-                historyIterator.next();
-            }
-        }
-    }
-
-    @Override
-    public void goForward() {
-        if (historyIterator.hasNext()) {
-            WebPageFragment nextPage = historyIterator.next();
-            addressBar.setText(nextPage.getWebAddress());
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.webPageContainer, nextPage).commit();
-        }
+    public void setAddressBar(String webAddress) {
+        addressBar.setText(webAddress);
     }
 }

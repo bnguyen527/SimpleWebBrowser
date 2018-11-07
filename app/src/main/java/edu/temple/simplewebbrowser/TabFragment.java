@@ -1,8 +1,10 @@
 package edu.temple.simplewebbrowser;
 
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,71 +12,69 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 
+import java.util.LinkedList;
+import java.util.ListIterator;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link BrowserListener} interface
  * to handle interaction events.
- * Use the {@link WebPageFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
-public class WebPageFragment extends Fragment {
+public class TabFragment extends Fragment {
 
-    private static final String WEB_ADDRESS_KEY = "web_address";
-
-    private String webAddress;
+    private LinkedList<String> browsingHistory;
+    private ListIterator<String> historyIterator;
     private WebView webView;
     private ImageButton backButton;
     private ImageButton forwardButton;
     private BrowserListener browserListener;
 
-    public WebPageFragment() {
+    public TabFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param webAddress Web address.
-     * @return A new instance of fragment WebPageFragment.
-     */
-    public static WebPageFragment newInstance(String webAddress) {
-        WebPageFragment fragment = new WebPageFragment();
-        Bundle args = new Bundle();
-        args.putString(WEB_ADDRESS_KEY, webAddress);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
-            webAddress = getArguments().getString(WEB_ADDRESS_KEY);
+        browsingHistory = new LinkedList<>();
+        historyIterator = browsingHistory.listIterator();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_webpage, container, false);
+        View view = inflater.inflate(R.layout.fragment_tab, container, false);
         webView = view.findViewById(R.id.webView);
         backButton = view.findViewById(R.id.backButton);
         forwardButton = view.findViewById(R.id.forwardButton);
 
-        webView.loadUrl(webAddress);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBack();
+                if (!browsingHistory.isEmpty()) {
+                    historyIterator.previous();
+                    if (historyIterator.hasPrevious()) {
+                        String previousUrl = historyIterator.previous();
+                        historyIterator.next();
+                        browserListener.setAddressBar(previousUrl);
+                        webView.loadUrl(previousUrl);
+                    } else {
+                        historyIterator.next();
+                    }
+                }
             }
         });
         forwardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goForward();
+                if (historyIterator.hasNext()) {
+                    String nextUrl = historyIterator.next();
+                    browserListener.setAddressBar(nextUrl);
+                    webView.loadUrl(nextUrl);
+                }
             }
         });
         return view;
@@ -90,16 +90,9 @@ public class WebPageFragment extends Fragment {
         }
     }
 
-    public void goBack() {
-        browserListener.goBack();
-    }
-
-    public void goForward() {
-        browserListener.goForward();
-    }
-
-    public String getWebAddress() {
-        return webAddress;
+    void loadUrl(String webAddress) {
+        historyIterator.add(webAddress);
+        webView.loadUrl(webAddress);
     }
 
     /**
@@ -109,7 +102,7 @@ public class WebPageFragment extends Fragment {
      * activity.
      */
     interface BrowserListener {
-        void goBack();
-        void goForward();
+        void setAddressBar(String webAddress);
     }
+
 }
