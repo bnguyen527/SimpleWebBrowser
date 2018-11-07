@@ -48,6 +48,7 @@ public class TabFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab, container, false);
         webView = view.findViewById(R.id.webView);
+        webView.getSettings().setJavaScriptEnabled(true);
         backButton = view.findViewById(R.id.backButton);
         forwardButton = view.findViewById(R.id.forwardButton);
 
@@ -93,6 +94,15 @@ public class TabFragment extends Fragment {
     void loadUrl(String webAddress) {
         historyIterator.add(webAddress);
         webView.loadUrl(webAddress);
+    }
+
+    String getCurrentAddress() {
+        if (!browsingHistory.isEmpty()) {
+            String currentAddress = historyIterator.previous();
+            historyIterator.next();
+            return currentAddress;
+        }
+        return "";
     }
 
     /**
