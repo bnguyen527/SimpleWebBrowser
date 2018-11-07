@@ -4,4 +4,7 @@
     <string name="goButton">GO</string>
     <string name="backButtonDesc">Go back</string>
     <string name="forwardButtonDesc">Go forward</string>
+    <string name="newButton">New</string>
+    <string name="previousButton">Prev</string>
+    <string name="nextButton">Next</string>
 </resources>

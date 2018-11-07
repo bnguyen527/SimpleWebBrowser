@@ -1,10 +1,10 @@
 package edu.temple.simplewebbrowser;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +41,12 @@ public class MainActivity extends AppCompatActivity implements WebPageFragment.B
                 fragmentTransaction.replace(R.id.webPageContainer, webPageFragment).commit();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.browser_menu, menu);
+        return true;
     }
 
     @Override

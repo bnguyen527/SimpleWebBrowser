@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/newButton"
+        android:icon="@drawable/ic_add_white_24dp"
+        android:title="@string/newButton"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/previousButton"
+        android:title="@string/previousButton"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/nextButton"
+        android:title="@string/nextButton"
+        app:showAsAction="always" />
+</menu>
