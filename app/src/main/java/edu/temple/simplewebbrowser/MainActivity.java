@@ -2,6 +2,7 @@ package edu.temple.simplewebbrowser;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,8 +17,9 @@ public class MainActivity extends AppCompatActivity implements TabFragment.Brows
 
     EditText addressBar;
     Button goButton;
+    ViewPager tabManager;
     FragmentManager fragmentManager;
-    TabFragment browserTab;
+    ArrayList<TabFragment> browserTabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,16 +28,17 @@ public class MainActivity extends AppCompatActivity implements TabFragment.Brows
 
         addressBar = findViewById(R.id.addressBar);
         goButton = findViewById(R.id.goButton);
+        tabManager = findViewById(R.id.tabManager);
         fragmentManager = getSupportFragmentManager();
-        browserTab = new TabFragment();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.webPageContainer, browserTab).commit();
+        browserTabs = new ArrayList<>();
+        browserTabs.add(new TabFragment());
+        tabManager.setAdapter(new TabFragmentAdapter(fragmentManager, browserTabs));
 
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String webAddress = addressBar.getText().toString();
-                browserTab.loadUrl(webAddress);
+                browserTabs.get(tabManager.getCurrentItem()).loadUrl(webAddress);
             }
         });
     }
