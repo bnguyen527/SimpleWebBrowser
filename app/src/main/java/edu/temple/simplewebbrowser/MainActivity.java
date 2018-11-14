@@ -1,9 +1,11 @@
 package edu.temple.simplewebbrowser;
 
+import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements TabFragment.Brows
         fragmentManager = getSupportFragmentManager();
         browserTabs = new ArrayList<>();
         tabIterator = browserTabs.listIterator();
-        tabIterator.add(new TabFragment());
+        tabIterator.add(TabFragment.newInstance());
         tabFragmentAdapter = new TabFragmentAdapter(fragmentManager, browserTabs);
         tabManager.setAdapter(tabFragmentAdapter);
 
@@ -58,6 +60,18 @@ public class MainActivity extends AppCompatActivity implements TabFragment.Brows
                 browserTabs.get(tabManager.getCurrentItem()).loadUrl(webAddress);
             }
         });
+
+        Uri url = getIntent().getData();
+        Log.d("URL", url == null ? "null" : "not null");
+        if (url != null) {
+            String webAddress = url.toString();
+            Log.d("WEB ADDRESS", webAddress);
+            tabIterator.add(TabFragment.newInstance());
+            tabFragmentAdapter.notifyDataSetChanged();
+            tabManager.setCurrentItem(tabManager.getCurrentItem() + 1);
+            Log.d("NUM TABS", "" + browserTabs.size());
+            browserTabs.get(tabManager.getCurrentItem()).loadUrl(webAddress);
+        }
     }
 
     @Override
@@ -70,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements TabFragment.Brows
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.newButton:
-                tabIterator.add(new TabFragment());
+                tabIterator.add(TabFragment.newInstance());
                 tabFragmentAdapter.notifyDataSetChanged();
                 tabManager.setCurrentItem(tabManager.getCurrentItem() + 1);
                 return true;

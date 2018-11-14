@@ -35,6 +35,13 @@ public class TabFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static TabFragment newInstance() {
+        TabFragment fragment = new TabFragment();
+        fragment.browsingHistory = new LinkedList<>();
+        fragment.historyIterator = fragment.browsingHistory.listIterator();
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
